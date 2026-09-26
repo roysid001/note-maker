@@ -1,44 +1,36 @@
-package com.sid.notemaker;
+package com.sid.notemaker.service;
 
-import org.springframework.web.bind.annotation.*;
+import com.sid.notemaker.Note;
+import org.springframework.stereotype.Service;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
-public class HelloController {
-
+@Service
+public class NoteService {
     List<Note> notes = new ArrayList<>();
     int id = 1;
 
-    public  HelloController () {
+    public NoteService() {
         notes.add(new Note(id++, "Java", "Learning Java"));
         notes.add(new Note(id++, "Spring Boot", "Learning Spring Boot"));
         notes.add(new Note(id++, "PostgreSql", "Learning PostgreSql"));
     }
 
-    @GetMapping("/")
     public String hello () {
         return "Hello from Note Maker!";
     }
 
-    @GetMapping("/notes")
     public List<Note> getNotes () {
         return notes;
     }
 
-    @PostMapping("/post")
-    public String postNote (@RequestBody Note note) {
-        System.out.println(note.getTitle());
-        System.out.println(note.getContent());
-
+    public String postNote (Note note) {
         notes.add(new Note(id++, note.getTitle(), note.getContent()));
         return "Note "+note.getTitle()+" created with content: "+note.getContent();
     }
 
-    @GetMapping("/notes/{id}")
-    public Note getNotesById (@PathVariable int id) {
+    public Note getNotesById (int id) {
         Note noteForId = null;
         for (Note note : notes) {
             if (note.getId() == id) {
@@ -49,8 +41,7 @@ public class HelloController {
         return noteForId;
     }
 
-    @PutMapping("/notes/{id}")
-    public void updateNote(@PathVariable int id, @RequestBody Note note) {
+    public void updateNote(int id, Note note) {
         Note noteForId = null;
         for (Note n: notes) {
             if (n.getId() == id) {
@@ -62,8 +53,7 @@ public class HelloController {
         noteForId.setContent(note.getContent());
     }
 
-    @DeleteMapping("/notes/{id}")
-    public void deleteNote (@PathVariable int id) {
+    public void deleteNote (int id) {
         Note noteById = null;
         for (Note n : notes) {
             if (n.getId() == id) {

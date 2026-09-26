@@ -1,0 +1,30 @@
+### Get all notes
+GET http://localhost:8080/notes
+
+
+### Get note by ID
+GET http://localhost:8080/notes/2
+
+
+### Create note
+POST http://localhost:8080/post
+Content-Type: application/json
+
+{
+  "title": "AWS",
+  "content": "Learning AWS"
+}
+
+
+### Update note
+PUT http://localhost:8080/notes/4
+Content-Type: application/json
+
+{
+  "title": "AWS",
+  "content": "Learning AWS properly"
+}
+
+
+### Delete note
+DELETE http://localhost:8080/notes/4
