@@ -1,6 +1,7 @@
 package com.sid.notemaker.service;
 
 import com.sid.notemaker.Note;
+import com.sid.notemaker.exception.NoteNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,6 +39,9 @@ public class NoteService {
                 break;
             }
         }
+        if (noteForId == null) {
+            throw new NoteNotFoundException(id);
+        }
         return noteForId;
     }
 
@@ -48,6 +52,10 @@ public class NoteService {
                 noteForId = n;
                 break;
             }
+        }
+        if (noteForId == null) {
+            System.out.println("Note with id: " + id + " not found");
+            throw new NoteNotFoundException(id);
         }
         noteForId.setTitle(note.getTitle());
         noteForId.setContent(note.getContent());
@@ -60,6 +68,9 @@ public class NoteService {
                 noteById = n;
                 break;
             }
+        }
+        if (noteById == null) {
+            throw new NoteNotFoundException(id);
         }
         notes.remove(noteById);
     }

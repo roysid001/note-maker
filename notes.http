@@ -17,7 +17,7 @@ Content-Type: application/json
 
 
 ### Update note
-PUT http://localhost:8080/notes/4
+PUT http://localhost:8080/notes/5
 Content-Type: application/json
 
 {
