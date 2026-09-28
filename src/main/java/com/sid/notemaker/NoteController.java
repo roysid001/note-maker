@@ -1,6 +1,7 @@
 package com.sid.notemaker;
 
 import com.sid.notemaker.service.NoteService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class NoteController {
     }
 
     @PostMapping("/post")
-    public String postNote (@RequestBody Note note) {
+    public String postNote (@RequestBody @Valid Note note) {
         return service.postNote(note);
     }
 
@@ -35,7 +36,7 @@ public class NoteController {
     }
 
     @PutMapping("/notes/{id}")
-    public void updateNote(@PathVariable int id, @RequestBody Note note) {
+    public void updateNote(@PathVariable int id, @RequestBody @Valid Note note) {
         service.updateNote(id, note);
     }
 

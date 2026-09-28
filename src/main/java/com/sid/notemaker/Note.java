@@ -1,8 +1,12 @@
 package com.sid.notemaker;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class Note {
     private Integer id;         // so ts can be null and can be mapped to int
+    @NotBlank
     private String title;
+    @NotBlank
     private  String content;
 
     public Note () {

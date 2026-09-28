@@ -11,8 +11,8 @@ POST http://localhost:8080/post
 Content-Type: application/json
 
 {
-  "title": "AWS",
-  "content": "Learning AWS"
+  "title": "GCP",
+  "content": "Became GCP God"
 }
 
 
@@ -22,9 +22,9 @@ Content-Type: application/json
 
 {
   "title": "AWS",
-  "content": "Learning AWS properly"
+  "content": "Became AWS God"
 }
 
 
 ### Delete note
-DELETE http://localhost:8080/notes/4
+DELETE http://localhost:8080/notes/5
