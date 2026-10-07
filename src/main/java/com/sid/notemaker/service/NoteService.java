@@ -1,21 +1,21 @@
 package com.sid.notemaker.service;
 
 import com.sid.notemaker.Note;
+import com.sid.notemaker.dto.NoteRequestDTO;
 import com.sid.notemaker.exception.NoteNotFoundException;
+import com.sid.notemaker.repository.NoteRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class NoteService {
-    List<Note> notes = new ArrayList<>();
-    int id = 1;
 
-    public NoteService() {
-        notes.add(new Note(id++, "Java", "Learning Java"));
-        notes.add(new Note(id++, "Spring Boot", "Learning Spring Boot"));
-        notes.add(new Note(id++, "PostgreSql", "Learning PostgreSql"));
+    private final NoteRepository repository;
+
+    public NoteService (NoteRepository repository) {
+        this.repository = repository;
     }
 
     public String hello () {
@@ -23,55 +23,44 @@ public class NoteService {
     }
 
     public List<Note> getNotes () {
-        return notes;
+        return repository.findAll();
     }
 
-    public String postNote (Note note) {
-        notes.add(new Note(id++, note.getTitle(), note.getContent()));
-        return "Note "+note.getTitle()+" created with content: "+note.getContent();
+    public String postNote (NoteRequestDTO noteRequestDTO) {
+        LocalDateTime now = LocalDateTime.now();
+        Note note = new Note(
+                null,
+                noteRequestDTO.getTitle(),
+                noteRequestDTO.getContent(),
+                now,
+                now
+        );
+        repository.save(note);
+        return "Note "+noteRequestDTO.getTitle()+" created with content: "+noteRequestDTO.getContent();
     }
 
     public Note getNotesById (int id) {
-        Note noteForId = null;
-        for (Note note : notes) {
-            if (note.getId() == id) {
-                noteForId = note;
-                break;
-            }
-        }
-        if (noteForId == null) {
-            throw new NoteNotFoundException(id);
-        }
-        return noteForId;
+        return repository
+                .findById(id)
+                .orElseThrow(() -> new NoteNotFoundException(id));
     }
 
-    public void updateNote(int id, Note note) {
-        Note noteForId = null;
-        for (Note n: notes) {
-            if (n.getId() == id) {
-                noteForId = n;
-                break;
-            }
-        }
-        if (noteForId == null) {
-            System.out.println("Note with id: " + id + " not found");
-            throw new NoteNotFoundException(id);
-        }
-        noteForId.setTitle(note.getTitle());
-        noteForId.setContent(note.getContent());
+    public void updateNote(int id, NoteRequestDTO noteRequestDTO) {
+        Note note = repository
+                .findById(id)
+                .orElseThrow(() -> new NoteNotFoundException(id));
+        note.setTitle(noteRequestDTO.getTitle());
+        note.setContent(noteRequestDTO.getContent());
+        note.setUpdatedAt(LocalDateTime.now());
+
+        repository.save(note);
     }
 
     public void deleteNote (int id) {
-        Note noteById = null;
-        for (Note n : notes) {
-            if (n.getId() == id) {
-                noteById = n;
-                break;
-            }
-        }
-        if (noteById == null) {
-            throw new NoteNotFoundException(id);
-        }
-        notes.remove(noteById);
+        Note note = repository
+                .findById(id)
+                .orElseThrow(() -> new NoteNotFoundException(id));
+
+        repository.delete(note);
     }
 }

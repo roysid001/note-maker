@@ -3,7 +3,7 @@ GET http://localhost:8080/notes
 
 
 ### Get note by ID
-GET http://localhost:8080/notes/2
+GET http://localhost:8080/notes/7
 
 
 ### Create note
@@ -11,20 +11,20 @@ POST http://localhost:8080/post
 Content-Type: application/json
 
 {
-  "title": "GCP",
-  "content": "Became GCP God"
+  "title": "React",
+  "content": "Struggling to become React Dev"
 }
 
 
 ### Update note
-PUT http://localhost:8080/notes/5
+PUT http://localhost:8080/notes/7
 Content-Type: application/json
 
 {
-  "title": "AWS",
-  "content": "Became AWS God"
+  "title": "Spring",
+  "content": "Became Spring God"
 }
 
 
 ### Delete note
-DELETE http://localhost:8080/notes/5
+DELETE http://localhost:8080/notes/2
