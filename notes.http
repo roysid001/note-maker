@@ -3,16 +3,16 @@ GET http://localhost:8080/notes
 
 
 ### Get note by ID
-GET http://localhost:8080/notes/7
+GET http://localhost:8080/notes/9
 
 
 ### Create note
-POST http://localhost:8080/post
+POST http://localhost:8080/notes
 Content-Type: application/json
 
 {
-  "title": "React",
-  "content": "Struggling to become React Dev"
+  "title": "Kubernetes",
+  "content": "Struggling to become Kubernetes God"
 }
 
 
@@ -21,10 +21,10 @@ PUT http://localhost:8080/notes/7
 Content-Type: application/json
 
 {
-  "title": "Spring",
-  "content": "Became Spring God"
+  "title": "Kubernetes",
+  "content": "Struggling to become weakest Kubernetes developer"
 }
 
 
 ### Delete note
-DELETE http://localhost:8080/notes/2
+DELETE http://localhost:8080/notes/7
