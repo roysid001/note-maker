@@ -29,6 +29,11 @@ public class NoteController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @GetMapping("/notes/search")
+    public List<Note> searchNotes (@RequestParam String keyword) {
+        return service.searchNotes(keyword);
+    }
+
     @GetMapping("/notes/{id}")
     public Note getNotesById (@PathVariable int id) {
         return service.getNotesById(id);

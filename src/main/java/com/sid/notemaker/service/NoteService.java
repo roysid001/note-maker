@@ -58,4 +58,8 @@ public class NoteService {
 
         repository.delete(note);
     }
+
+    public List<Note> searchNotes (String keyword) {
+        return repository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(keyword, keyword);
+    }
 }
