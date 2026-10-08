@@ -18,15 +18,11 @@ public class NoteService {
         this.repository = repository;
     }
 
-    public String hello () {
-        return "Hello from Note Maker!";
-    }
-
     public List<Note> getNotes () {
         return repository.findAll();
     }
 
-    public String postNote (NoteRequestDTO noteRequestDTO) {
+    public void postNote (NoteRequestDTO noteRequestDTO) {
         LocalDateTime now = LocalDateTime.now();
         Note note = new Note(
                 null,
@@ -36,7 +32,6 @@ public class NoteService {
                 now
         );
         repository.save(note);
-        return "Note "+noteRequestDTO.getTitle()+" created with content: "+noteRequestDTO.getContent();
     }
 
     public Note getNotesById (int id) {

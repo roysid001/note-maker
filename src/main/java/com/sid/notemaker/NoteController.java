@@ -16,19 +16,14 @@ public class NoteController {
         this.service = service;
     }
 
-    @GetMapping("/")
-    public String hello () {
-        return service.hello();
-    }
-
     @GetMapping("/notes")
     public List<Note> getNotes () {
         return service.getNotes();
     }
 
     @PostMapping("/post")
-    public String postNote (@RequestBody @Valid NoteRequestDTO noteRequestDTO) {
-        return service.postNote(noteRequestDTO);
+    public void postNote (@RequestBody @Valid NoteRequestDTO noteRequestDTO) {
+        service.postNote(noteRequestDTO);
     }
 
     @GetMapping("/notes/{id}")
