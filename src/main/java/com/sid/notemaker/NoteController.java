@@ -3,6 +3,10 @@ package com.sid.notemaker;
 import com.sid.notemaker.dto.NoteRequestDTO;
 import com.sid.notemaker.service.NoteService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +23,13 @@ public class NoteController {
     }
 
     @GetMapping("/notes")
-    public List<Note> getNotes () {
-        return service.getNotes();
+    public Page<Note> getNotes (
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue="createdAt") String sortBy,
+        @RequestParam(defaultValue="asc") String direction
+    ) {
+        return service.getNotes(page, size, sortBy, direction);
     }
 
     @PostMapping("/notes")

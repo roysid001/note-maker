@@ -4,6 +4,10 @@ import com.sid.notemaker.Note;
 import com.sid.notemaker.dto.NoteRequestDTO;
 import com.sid.notemaker.exception.NoteNotFoundException;
 import com.sid.notemaker.repository.NoteRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,8 +22,26 @@ public class NoteService {
         this.repository = repository;
     }
 
-    public List<Note> getNotes () {
-        return repository.findAll();
+    public Page<Note> getNotes (int page, int size, String sortBy, String direction) {
+        List<String> allowedFields = List.of("id", "title", "createdAt", "updatedAt");
+
+        if (page < 0) {
+            throw new IllegalArgumentException("Page cannot be negative");
+        }
+        if (size <= 0) {
+            throw new IllegalArgumentException("Size must be positive");
+        }
+        if (!allowedFields.contains(sortBy)) {
+            throw new IllegalArgumentException("Invalid sort field: " + sortBy);
+        }
+        if (!direction.equalsIgnoreCase("asc") && !direction.equalsIgnoreCase("desc")) {
+            throw new IllegalArgumentException("Invalid sort direction: " + direction);
+        }
+
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return repository.findAll(pageable);
     }
 
     public void postNote (NoteRequestDTO noteRequestDTO) {
