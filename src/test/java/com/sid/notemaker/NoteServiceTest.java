@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,6 +56,38 @@ public class NoteServiceTest {
         assertEquals(
                 Sort.Direction.ASC,
                 actualPageable.getSort().getOrderFor("title").getDirection()
+        );
+    }
+
+    @Test
+    public void getPages_ThrowsException_WhenPageIsNegative () {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> noteService.getNotes(-1, 2, "title", "asc")
+        );
+    }
+
+    @Test
+    public void getPages_ThrowsException_WhenPageSizeIsNotPositive () {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> noteService.getNotes(0, 0, "title", "asc")
+        );
+    }
+
+    @Test
+    public void getPages_ThrowsException_WhenTitleIsInvalid () {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> noteService.getNotes(1, 2, "Apache", "asc")
+        );
+    }
+
+    @Test
+    public void getPages_ThrowsException_WhenDirectionIsInvalid () {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> noteService.getNotes(1, 2, "title", "sideways")
         );
     }
 }
