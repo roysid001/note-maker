@@ -82,6 +82,9 @@ public class NoteService {
     }
 
     public List<Note> searchNotes (String keyword) {
+        if (keyword.equalsIgnoreCase(" ")) {
+
+        }
         return repository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(keyword, keyword);
     }
 }

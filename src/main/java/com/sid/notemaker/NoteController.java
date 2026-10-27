@@ -3,10 +3,8 @@ package com.sid.notemaker;
 import com.sid.notemaker.dto.NoteRequestDTO;
 import com.sid.notemaker.service.NoteService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +37,7 @@ public class NoteController {
     }
 
     @GetMapping("/notes/search")
-    public List<Note> searchNotes (@RequestParam String keyword) {
+    public List<Note> searchNotes (@RequestParam @NotBlank String keyword) {
         return service.searchNotes(keyword);
     }
 

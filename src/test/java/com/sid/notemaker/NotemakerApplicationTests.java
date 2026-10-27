@@ -5,7 +5,6 @@ import com.sid.notemaker.repository.NoteRepository;
 import com.sid.notemaker.service.NoteService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -14,9 +13,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @Transactional
 @SpringBootTest
@@ -44,28 +40,19 @@ class NotemakerApplicationTests {
 
 	@Test
 	void updateNote() {
-		Note existingNote = new Note(
-				3, "GCP", "Google Cloud Platform", LocalDateTime.now(), LocalDateTime.now()
+		Note existingNote = repository.save(
+				new Note(null, "GCP", "Google Cloud Platform",
+						LocalDateTime.now(), LocalDateTime.now())
 		);
-
-		when(repository.findById(3))
-				.thenReturn(Optional.of(existingNote));
-
-		when(repository.save(any(Note.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0));
 
 		NoteRequestDTO noteRequestDTO = new NoteRequestDTO(
 				"GCPD", "Gotham City Police Department"
 		);
 
-		noteService.updateNote(3, noteRequestDTO);
+		noteService.updateNote(existingNote.getId(), noteRequestDTO);
 
-		ArgumentCaptor<Note> captor =
-				ArgumentCaptor.forClass(Note.class);
-
-		verify(repository).save(captor.capture());
-
-		Note updatedNote = captor.getValue();
+		Note updatedNote = repository.findById(existingNote.getId())
+				.orElseThrow();
 
 		assertEquals("GCPD", updatedNote.getTitle());
 		assertEquals("Gotham City Police Department", updatedNote.getContent());
@@ -73,15 +60,15 @@ class NotemakerApplicationTests {
 
 	@Test
 	void deleteNote() {
-		Note existingNote = new Note(
-				3, "GCP", "Google Cloud Platform", LocalDateTime.now(), LocalDateTime.now()
+		Note existingNote = repository.save(
+				new Note(null, "GCP", "Google Cloud Platform",
+						LocalDateTime.now(), LocalDateTime.now())
 		);
 
-		when(repository.findById(3))
-				.thenReturn(Optional.of(existingNote));
+		Integer id = existingNote.getId();
 
-		noteService.deleteNote(3);
+		noteService.deleteNote(id);
 
-		verify(repository).delete(existingNote);
+		assertTrue(repository.findById(id).isEmpty());
 	}
 }
