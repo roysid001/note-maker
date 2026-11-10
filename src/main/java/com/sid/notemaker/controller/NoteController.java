@@ -1,6 +1,7 @@
-package com.sid.notemaker;
+package com.sid.notemaker.controller;
 
 import com.sid.notemaker.dto.NoteRequestDTO;
+import com.sid.notemaker.dto.NoteResponseDTO;
 import com.sid.notemaker.service.NoteService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -21,7 +22,7 @@ public class NoteController {
     }
 
     @GetMapping("/notes")
-    public Page<Note> getNotes (
+    public Page<NoteResponseDTO> getNotes (
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue="createdAt") String sortBy,
@@ -31,25 +32,24 @@ public class NoteController {
     }
 
     @PostMapping("/notes")
-    public ResponseEntity<Void> postNote (@RequestBody @Valid NoteRequestDTO noteRequestDTO) {
-        service.postNote(noteRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<NoteResponseDTO> postNote (@RequestBody @Valid NoteRequestDTO noteRequestDTO) {
+        NoteResponseDTO createdNote = service.postNote(noteRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdNote);
     }
 
     @GetMapping("/notes/search")
-    public List<Note> searchNotes (@RequestParam @NotBlank String keyword) {
+    public List<NoteResponseDTO> searchNotes (@RequestParam @NotBlank String keyword) {
         return service.searchNotes(keyword);
     }
 
     @GetMapping("/notes/{id}")
-    public Note getNotesById (@PathVariable int id) {
-        return service.getNotesById(id);
+    public NoteResponseDTO getNotesById (@PathVariable int id) {
+        return service.getNoteById(id);
     }
 
     @PutMapping("/notes/{id}")
-    public ResponseEntity<Void> updateNote(@PathVariable int id, @RequestBody @Valid NoteRequestDTO noteRequestDTO) {
-        service.updateNote(id, noteRequestDTO);
-        return ResponseEntity.ok().build();
+    public NoteResponseDTO updateNote(@PathVariable int id, @RequestBody @Valid NoteRequestDTO noteRequestDTO) {
+        return service.updateNote(id, noteRequestDTO);
     }
 
     @DeleteMapping("/notes/{id}")

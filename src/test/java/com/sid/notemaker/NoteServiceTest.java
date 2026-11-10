@@ -1,5 +1,6 @@
 package com.sid.notemaker;
 
+import com.sid.notemaker.model.Note;
 import com.sid.notemaker.repository.NoteRepository;
 import com.sid.notemaker.service.NoteService;
 import org.junit.jupiter.api.Test;

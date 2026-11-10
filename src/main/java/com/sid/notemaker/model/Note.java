@@ -1,9 +1,6 @@
-package com.sid.notemaker;
+package com.sid.notemaker.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
@@ -16,9 +13,12 @@ public class Note {
     @NotBlank
     private String title;
     @NotBlank
-    private  String content;
+    private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Note () {
 
@@ -32,11 +32,20 @@ public class Note {
         this.updatedAt = updatedAt;
     }
 
-    public int getId() {
+    public Note(Integer id, String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt, User user) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.user = user;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -70,5 +79,13 @@ public class Note {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

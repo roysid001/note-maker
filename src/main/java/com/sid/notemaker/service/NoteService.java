@@ -1,6 +1,8 @@
 package com.sid.notemaker.service;
 
-import com.sid.notemaker.Note;
+import com.sid.notemaker.dto.NoteResponseDTO;
+import com.sid.notemaker.mapper.NoteMapper;
+import com.sid.notemaker.model.Note;
 import com.sid.notemaker.dto.NoteRequestDTO;
 import com.sid.notemaker.exception.NoteNotFoundException;
 import com.sid.notemaker.repository.NoteRepository;
@@ -22,7 +24,7 @@ public class NoteService {
         this.repository = repository;
     }
 
-    public Page<Note> getNotes (int page, int size, String sortBy, String direction) {
+    public Page<NoteResponseDTO> getNotes (int page, int size, String sortBy, String direction) {
         List<String> allowedFields = List.of("id", "title", "createdAt", "updatedAt");
 
         if (page < 0) {
@@ -41,10 +43,12 @@ public class NoteService {
         Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return repository.findAll(pageable);
+        Page<Note> notes = repository.findAll(pageable);
+
+        return notes.map(NoteMapper::toNoteResponseDTO);
     }
 
-    public void postNote (NoteRequestDTO noteRequestDTO) {
+    public NoteResponseDTO postNote (NoteRequestDTO noteRequestDTO) {
         LocalDateTime now = LocalDateTime.now();
         Note note = new Note(
                 null,
@@ -53,16 +57,18 @@ public class NoteService {
                 now,
                 now
         );
-        repository.save(note);
+        return NoteMapper.toNoteResponseDTO(repository.save(note));
     }
 
-    public Note getNotesById (int id) {
-        return repository
+    public NoteResponseDTO getNoteById (int id) {
+        Note note = repository
                 .findById(id)
                 .orElseThrow(() -> new NoteNotFoundException(id));
+
+        return NoteMapper.toNoteResponseDTO(note);
     }
 
-    public void updateNote(int id, NoteRequestDTO noteRequestDTO) {
+    public NoteResponseDTO updateNote (int id, NoteRequestDTO noteRequestDTO) {
         Note note = repository
                 .findById(id)
                 .orElseThrow(() -> new NoteNotFoundException(id));
@@ -70,7 +76,7 @@ public class NoteService {
         note.setContent(noteRequestDTO.getContent());
         note.setUpdatedAt(LocalDateTime.now());
 
-        repository.save(note);
+        return NoteMapper.toNoteResponseDTO(repository.save(note));
     }
 
     public void deleteNote (int id) {
@@ -81,10 +87,8 @@ public class NoteService {
         repository.delete(note);
     }
 
-    public List<Note> searchNotes (String keyword) {
-        if (keyword.equalsIgnoreCase(" ")) {
-
-        }
-        return repository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(keyword, keyword);
+    public List<NoteResponseDTO> searchNotes (String keyword) {
+        List<Note> notes = repository.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(keyword, keyword);
+        return notes.stream().map(NoteMapper::toNoteResponseDTO).toList();
     }
 }
